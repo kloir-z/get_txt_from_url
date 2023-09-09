@@ -68,15 +68,15 @@ def get_txt_from_url(request):
         return (error_json, 500, headers)
 
 #以下はローカルテスト用
-#利用方法：http://127.0.0.1:5000/get_txt?url=https://ja.wikipedia.org/wiki/Qiita
-from flask import Flask, request
+# #利用方法：http://127.0.0.1:5000/get_txt?url=https://ja.wikipedia.org/wiki/Qiita
+# from flask import Flask, request
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route('/get_txt', methods=['GET'])
-def get_txt_route():
-    return get_txt_from_url(request)
+# @app.route('/get_txt', methods=['GET'])
+# def get_txt_route():
+#     return get_txt_from_url(request)
 
-if __name__ == "__main__":
-    # Flaskアプリをローカルで実行
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     # Flaskアプリをローカルで実行
+#     app.run(debug=True)

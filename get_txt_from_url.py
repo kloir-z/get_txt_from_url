@@ -6,16 +6,13 @@ def get_txt_from_url(request):
     try:
         # ページのコンテンツをフェッチ
         url = request.args.get('url')
-        headers = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.yahoo.co.jp/'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76', 'Referer': 'https://search.yahoo.co.jp/realtime/'}
         page = requests.get(url, headers=headers, verify=False)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         # タイトルを抽出
         title = soup.title.string if soup.title else "Untitled"
         markdown_output = f"# {title}\n"
-
-        tags = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table'])
-        print("Found tags:", tags)  # この行を追加
 
         outputted_texts = set()
 
@@ -63,8 +60,15 @@ def get_txt_from_url(request):
         
         return (output_json, 200, headers)
 
+    except requests.exceptions.RequestException as e:
+        print(f"Requests exception occurred: {e}")
+        error_json = json.dumps({"error": str(e)})
+        headers = {
+            'Access-Control-Allow-Origin': '*'
+        }
+        return (error_json, 500, headers)
     except Exception as e:
-        print(f"Exception occurred: {e}")  
+        print(f"General exception occurred: {e}")
         error_json = json.dumps({"error": str(e)})
         headers = {
             'Access-Control-Allow-Origin': '*'

@@ -6,24 +6,30 @@ def get_txt_from_url(request):
     try:
         # ページのコンテンツをフェッチ
         url = request.args.get('url')
-        page = requests.get(url, verify=False)
         headers = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.yahoo.co.jp/'}
-        page = requests.get(url, headers=headers)
+        page = requests.get(url, headers=headers, verify=False)
         soup = BeautifulSoup(page.content, 'html.parser')
 
         # タイトルを抽出
         title = soup.title.string if soup.title else "Untitled"
         markdown_output = f"# {title}\n"
 
+        tags = soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table'])
+        print("Found tags:", tags)  # この行を追加
+
         outputted_texts = set()
 
         # 主要なテキストを抽出
         for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table']):
             text = tag.get_text().strip()
-    
+
+            # 親が<li>タグであればスキップ
+            if tag.find_parent("li"):
+                continue
+
             if text in outputted_texts:
                 continue
-            
+
             outputted_texts.add(text)
             
             if tag.name == 'h1':

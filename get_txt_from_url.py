@@ -18,7 +18,7 @@ def get_txt_from_url(request):
         outputted_texts = set()
 
         # 主要なテキストを抽出
-        for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'a', 'li', 'table']):
+        for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table']):
             text = tag.get_text().strip()
     
             if text in outputted_texts:

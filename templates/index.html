@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Text from URL</title>
+</head>
+<body>
+    <form action="/show_result" method="post">
+        <label for="endpoint">Select Endpoint:</label>
+        <select id="endpoint" name="endpoint">
+            {% for endpoint in endpoints %}
+                <option value="{{ endpoint }}">{{ endpoint }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url">
+        <input type="submit" value="Get Text">
+    </form>
+
+    {% if content %}
+    <textarea rows="30" cols="100">
+        {{ content }}
+    </textarea>
+    {% endif %}
+</body>
+</html>

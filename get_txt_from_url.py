@@ -34,8 +34,6 @@ def get_txt_from_url(request):
                 markdown_output += f"### {tag.get_text().strip()}\n"
             elif tag.name == 'pre':
                 markdown_output += f"```\n{tag.get_text().strip()}\n```\n"
-            elif tag.name == 'a':
-                markdown_output += f"{tag.get_text().strip()}\n"
             elif tag.name == 'li':
                 markdown_output += f"- {tag.get_text().strip()}\n"
             elif tag.name == 'table':
@@ -66,17 +64,3 @@ def get_txt_from_url(request):
             'Access-Control-Allow-Origin': '*'
         }
         return (error_json, 500, headers)
-
-#以下はローカルテスト用
-# #利用方法：http://127.0.0.1:5000/get_txt?url=https://ja.wikipedia.org/wiki/Qiita
-# from flask import Flask, request
-
-# app = Flask(__name__)
-
-# @app.route('/get_txt', methods=['GET'])
-# def get_txt_route():
-#     return get_txt_from_url(request)
-
-# if __name__ == "__main__":
-#     # Flaskアプリをローカルで実行
-#     app.run(debug=True)

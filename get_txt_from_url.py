@@ -17,7 +17,7 @@ def get_txt_from_url(request):
         outputted_texts = set()
 
         # 主要なテキストを抽出
-        for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table']):
+        for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li', 'table', 'strong', 'ol']):
             text = tag.get_text().strip()
 
             # 親が<li>タグであればスキップ
@@ -36,8 +36,16 @@ def get_txt_from_url(request):
             elif tag.name.startswith('h'):
                 markdown_output += f"### {tag.get_text().strip()}\n"
             elif tag.name == 'pre':
-                markdown_output += f"```\n{tag.get_text().strip()}\n```\n"
+                pre_text = tag.get_text()
+                pre_text = pre_text.replace('\\n', '\n')
+                markdown_output += f"```\n{pre_text}\n```\n"
+            elif tag.name == 'ol':
+                for i, li_tag in enumerate(tag.find_all('li'), 1):
+                    markdown_output += f"{i}. {li_tag.get_text().strip()}\n"
             elif tag.name == 'li':
+                # 親が<ol>タグであればスキップ（既に処理済み）
+                if tag.find_parent("ol"):
+                    continue
                 markdown_output += f"- {tag.get_text().strip()}\n"
             elif tag.name == 'table':
                 rows = tag.find_all('tr')
@@ -47,6 +55,8 @@ def get_txt_from_url(request):
                     markdown_output += "|".join(cell_texts) + "\n"
                     if cells and all(cell.name == 'th' for cell in cells):
                         markdown_output += "|".join(["---" for _ in cells]) + "\n"
+            elif tag.name == 'strong' or tag.name == 'b':
+                markdown_output += f"**{tag.get_text().strip()}**\n"
             else:
                 markdown_output += f"\n{tag.get_text().strip()}\n\n"
 
